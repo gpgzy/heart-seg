@@ -18,8 +18,8 @@ class Heart_Loader(Dataset):
         self.resizer = torchvision.transforms.Resize((256,256))
 
     def __len__(self):
-        # return len(os.listdir(self.imagePath))*times
-        return 10
+        return len(os.listdir(self.imagePath))*times
+        # return 10
 
     def __getitem__(self, item):
         item = item+1
