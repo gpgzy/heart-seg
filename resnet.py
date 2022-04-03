@@ -226,10 +226,10 @@ class Bottleneck(nn.Module):
 #         state_dict.update(model_dict)
 #         self.load_state_dict(state_dict)
 class ResNet(nn.Module):
-    def __init__(self, block, layers, pretrained=True):  # layers=参数列表 block选择不同的类
+    def __init__(self, block, layers,num_classes, pretrained=True,):  # layers=参数列表 block选择不同的类
         self.inplanes = 64
         super(ResNet, self).__init__()
-        self.conv1 = nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3,bias=False)
+        self.conv1 = nn.Conv2d(1, 64, kernel_size=7, stride=2, padding=3,bias=False)
         self.bn1 = nn.BatchNorm2d(64)
         self.relu = nn.ReLU(inplace=True)
         self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
@@ -239,8 +239,8 @@ class ResNet(nn.Module):
         # self.layer4 = self._make_layer(block, 512, layers[3], stride=2)
         self.layer4 = self._make_MG_unit(block, 512, blocks=[1,2,4], stride=1, dilation=4,
                                          BatchNorm=nn.BatchNorm2d)
-        # self.avgpool = nn.AvgPool2d(7)
-        # self.fc = nn.Linear(512 * block.expansion, num_classes)
+        self.avgpool = nn.AvgPool2d(7)
+        self.fc = nn.Linear(512 * block.expansion, num_classes)
         # self.layer5 = nn.Sequential(
         #         nn.Conv2d(512, 2048,
         #                   kernel_size=1, stride=1, bias=False),
@@ -285,9 +285,9 @@ class ResNet(nn.Module):
         x = self.layer3(x)
         x = self.layer4(x)
         # x = self.layer5(x)
-        # x = self.avgpool(x)
+        x = self.avgpool(x)
         # x = x.view(x.size(0), -1)   # 将输出结果展成一行
-        # x = self.fc(x)
+        x = self.fc(x)
 
         return x,low_level_feat
 
@@ -358,7 +358,7 @@ def ResNet18(output_stride, BatchNorm, pretrained=True):
     # model = ModuleHelper.load_model(model, pretrained=pretrained)
     print('Constructs a ResNet-18 model')
     # model = ResNet(BasicBlock, [2, 2, 2, 2], output_stride, BatchNorm, pretrained=pretrained, resnet_layers=18)
-    model = ResNet(BasicBlock, [2, 2, 2, 2])
+    model = ResNet(BasicBlock, [2, 2, 2, 2],4,pretrained=False)
     return model
 
 if __name__ == "__main__":

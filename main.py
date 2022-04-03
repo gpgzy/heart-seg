@@ -14,14 +14,15 @@ from losses import LovaszLossSoftmax
 from unet_model import UNet as MyUnet
 import torch.nn.functional as F
 from metrics import *
-
+from resnet import ResNet18
 def train_HEART(device=torch.device('cuda' if torch.cuda.is_available() else 'cpu'), epochs=30, batch_size=1, lr=0.001):
     # 加载训练集
     train_dataset = Heart_Loader()
     valid_dataset = Valid_Loader()
-    checkpoint = torch.load('best_model_class2CH_290.pth')
-    net = MyUnet(1,4)
-    net.load_state_dict(checkpoint)
+    # checkpoint = torch.load('best_model_class2CH_290.pth')
+    # net = MyUnet(1,4)
+    net = ResNet18(BatchNorm=nn.BatchNorm2d, pretrained=False, output_stride=8)
+    # net.load_state_dict(checkpoint)
     net = net.to(device)
     train_loader = torch.utils.data.DataLoader(dataset=train_dataset,
                                                batch_size=batch_size,
@@ -53,6 +54,7 @@ def train_HEART(device=torch.device('cuda' if torch.cuda.is_available() else 'cp
             label = label.to(device=device,dtype = torch.long)
             # 使用网络参数，输出预测结果
             pred = net(image)
+            # print(type(pred))
             # 计算loss
             loss = criterion(pred,label)
             # print((loss.item()))

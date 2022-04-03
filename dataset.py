@@ -12,8 +12,8 @@ class Heart_Loader(Dataset):
         '''
         根据标注文件去取图片
         '''
-        # self.imagePath = 'E:/training/training'
-        self.imagePath = '/mnt/data/guoziyu/training'
+        self.imagePath = 'E:/training/training'
+        # self.imagePath = '/mnt/data/guoziyu/training'
         self.totensor = torchvision.transforms.ToTensor()
         self.resizer = torchvision.transforms.Resize((256,256))
 
@@ -55,8 +55,8 @@ class Valid_Loader(Dataset):
         '''
         根据标注文件去取图片
         '''
-        # self.imagePath = 'E:/training/validate'
-        self.imagePath = '/mnt/data/guoziyu/validate'
+        self.imagePath = 'E:/training/validate'
+        # self.imagePath = '/mnt/data/guoziyu/validate'
         self.totensor = torchvision.transforms.ToTensor()
         self.resizer = torchvision.transforms.Resize((256,256))
 
